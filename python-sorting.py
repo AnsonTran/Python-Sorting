@@ -25,7 +25,6 @@ def bubble_sort(obj_list):
     Performs a bubble sort on the input list in increasing order. To increase
     efficiency, if a pass through the unsorted items in the list yields no
     swaps, the sort terminates.
-    REQ: objs in <obj_list> can be compared
     '''
     swap_made = True
     # Sorted index to the end of the list holds the largest, sorted items.
@@ -47,7 +46,6 @@ def bubble_sort(obj_list):
 def selection_sort(obj_list):
     '''(list of objs) -> None
     Performs a selection sort on the input list in increasing order.
-    REQ: objs in <obj_list> can be compared
     '''
     for i in range(len(obj_list)-1):
         (smallest_obj, smallest_i) = (obj_list[i], i)
@@ -62,7 +60,6 @@ def selection_sort(obj_list):
 def insertion_sort(obj_list):
     '''(list of objs) -> None
     Performs an insertion sort on the input list in increasing order.
-    REQ: objs in <obj_list> can be compared
     '''
     # Insert each obj in the list into the sorted portion [0, i)
     for i in range(len(obj_list)):
@@ -80,10 +77,10 @@ def insertion_sort(obj_list):
 
 def quick_sort_helper(obj_list, start, end):
     '''(list of objs, int, int) -> None
-    Performs a quick sort on the input list from index <start> to index
-    <end> of <obj_list>. To perform a sort on the whole list, let <start> = 0
-    and <end> = len(obj_list)-1
-    REQ: objs in <obj_ist> can be compared
+    Recursive helper function for quick_sort. Performs a quick sort on the
+    input list from index <start> to index <end> of <obj_list>. To perform a
+    sort on the whole list, let <start> = 0 and <end> = len(obj_list)-1 or use
+    quick_sort function
     REQ: 0 <= start < len(obj_list)
     REQ: start <= end < len(obj_list)
     '''
@@ -110,9 +107,36 @@ def quick_sort_helper(obj_list, start, end):
 def quick_sort(obj_list):
     '''(list of objs) -> None
     Performs a quick sort recursively on the input list <obj_list>.
-    REQ: objs in <obj_list> can be compared
     '''
     quick_sort_helper(obj_list, 0, len(obj_list)-1)
+
+
+def merge_sort(obj_list):
+    '''(list of objs) -> None
+    Perform a recursive out-of-place merge sort on <obj_list>.
+    '''
+    # Find the middle of the list to partition
+    mid_index = len(obj_list)//2
+    # Partition and recursively sort if there is at least 2 objects
+    if len(obj_list) > 1:
+        # Create a copy of the left and right half of the list and sort it
+        left_list = obj_list[:mid_index]
+        right_list = obj_list[mid_index:]
+        merge_sort(left_list)
+        merge_sort(right_list)
+        # Clear obj list
+        obj_list.clear()
+        # Merge the two sorted halves of the list to
+        # <obj_list> until one of the lists is empty
+        while left_list and right_list:
+            if left_list[0] < right_list[0]:
+                obj_list.append(left_list.pop(0))
+            else:
+                obj_list.append(right_list.pop(0))
+        # Either left_list or right_list is empty, so add it to the
+        # end of <obj_list>
+        obj_list.extend(left_list)
+        obj_list.extend(right_list)
 
 
 def radix_sort(list_of_int):
