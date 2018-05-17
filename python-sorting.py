@@ -71,6 +71,7 @@ def insertion_sort(obj_list):
         # Determine the index to insert the obj
         while insert_i < i and not_inserted:
             if obj_list[i] < obj_list[insert_i]:
+                # Pop obj from index <i> and insert at <insert_i>
                 obj = obj_list.pop(i)
                 obj_list.insert(insert_i, obj)
                 not_inserted = False
@@ -112,3 +113,44 @@ def quick_sort(obj_list):
     REQ: objs in <obj_list> can be compared
     '''
     quick_sort_helper(obj_list, 0, len(obj_list)-1)
+
+
+def radix_sort(list_of_int):
+    '''(list of int) -> None
+    Performs a radix sort on a list of ints <list_of_int>.
+    '''
+    # Insert all the integers into the main bin
+    main_bin = list_of_int
+
+    # Check if there is at least two int in the list to sort
+    if len(list_of_int) > 1:
+        # Create 10 empty bins for 0-9
+        digit_bins = []
+        for i in range(10):
+            digit_bins.append([])
+        # We can get one's digit by digit%10//1
+        #            ten's digit by digit%100//10
+        #        hundred's digit by digit%1000//100
+        #              nth digit by digit%(n*10)//n
+        curr_digit = 1
+        # We also need to track when n > all numbers -> the list is sorted
+        # Find the largest number in the list to make this comparison
+        list_sorted = False
+        largest_int = max(main_bin)
+
+        while not list_sorted:
+            for num in main_bin:
+                # Determine the bin each number in main bin belongs in
+                num_digit = num % (curr_digit*10)//curr_digit
+                # Insert the number in its correct bin
+                digit_bins[num_digit].append(num)
+            # Empty the main bin
+            main_bin.clear()
+            # Add the items in the digit bins in ascending order
+            for digit_bin in digit_bins:
+                main_bin.extend(digit_bin)
+                digit_bin.clear()
+            # Move to the next digits place
+            curr_digit *= 10
+            # Check if the next iteration is needed (n > all numbers)
+            list_sorted = True if curr_digit > largest_int else False
