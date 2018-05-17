@@ -78,21 +78,37 @@ def insertion_sort(obj_list):
 
 
 def quick_sort_helper(obj_list, start, end):
-    '''(list of objs) -> None
-    Performs a quick sort on a list
+    '''(list of objs, int, int) -> None
+    Performs a quick sort on the input list from index <start> to index
+    <end> of <obj_list>. To perform a sort on the whole list, let <start> = 0
+    and <end> = len(obj_list)-1
+    REQ: objs in <obj_ist> can be compared
+    REQ: 0 <= start < len(obj_list)
+    REQ: start <= end < len(obj_list)
     '''
+    # Length of the list
     len_obj_list = end+1 - start
     if len_obj_list > 1:
+        # Choose the first object as the pivot
         pivot = obj_list[start]
         pivot_index = start
+        
+        # Move each object to the left or right of the pivot
+        # Left for less than pivot, right for greater or equal to pivot
+        # Keep track of the pivot's updated index each time
         for i in range(start+1, end+1):
             if obj_list[i] < pivot:
                 obj_list.insert(start, obj_list.pop(i))
                 pivot_index += 1
+        # Recursively quick sort on the sublists left and right of the pivot
         if pivot_index - start > 1:
             quick_sort_helper(obj_list, start, pivot_index-1)
         if end - pivot_index > 1:
             quick_sort_helper(obj_list, pivot_index+1, end)
 
 def quick_sort(obj_list):
+    '''(list of objs) -> None
+    Performs a quick sort recursively on the input list <obj_list>.
+    REQ: objs in <obj_list> can be compared
+    '''
     quick_sort_helper(obj_list, 0, len(obj_list)-1)
