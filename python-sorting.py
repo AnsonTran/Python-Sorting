@@ -10,7 +10,8 @@ def list_swap(obj_list, index1, index2):
     '''
     if index1 != index2:
         # Determine which indice is smaller/larger
-        (min_index, max_index) = (index1, index2) if index1 < index2 else (index2, index1)
+        (min_index, max_index) = ((index1, index2) if index1 < index2
+                                  else (index2, index1))
         # Remove the objs at both indices. Larger index before smallest index
         # as the larger index would be shifted down by one otherwise.
         (max_obj, min_obj) = (obj_list.pop(max_index), obj_list.pop(min_index))
@@ -90,7 +91,7 @@ def quick_sort_helper(obj_list, start, end):
         # Choose the first object as the pivot
         pivot = obj_list[start]
         pivot_index = start
-        
+
         # Move each object to the left or right of the pivot
         # Left for less than pivot, right for greater or equal to pivot
         # Keep track of the pivot's updated index each time
@@ -103,6 +104,7 @@ def quick_sort_helper(obj_list, start, end):
             quick_sort_helper(obj_list, start, pivot_index-1)
         if end - pivot_index > 1:
             quick_sort_helper(obj_list, pivot_index+1, end)
+
 
 def quick_sort(obj_list):
     '''(list of objs) -> None
@@ -139,15 +141,61 @@ def merge_sort(obj_list):
         obj_list.extend(right_list)
 
 
-def radix_sort(list_of_int):
+def heap_sort(obj_list):
+    '''(list of objs) -> None
+    Performs an in-place heap sort on <obj_list>.
+    '''
+    # Reorganize <obj_list> as a complete max heap (list implementation)
+    for i in range(len(obj_list)):
+        # Insert obj at index i into the max heap (no action needed)
+        obj_i = i
+        parent_i = (i-1)//2
+        # Bubble up the obj to maintain max heap property
+        # i.e. swap obj with parent until parent > obj or obj at top of heap
+        while obj_i > 0 and obj_list[parent_i] < obj_list[obj_i]:
+            list_swap(obj_list, parent_i, obj_i)
+            # Update current and parent indices for next iteration
+            obj_i = parent_i
+            parent_i = (obj_i-1)//2
+    # Max obj is at the start of the list
+    # Empty the heap while bubbling down to maintain the heap property
+    for i in range(len(obj_list)-1, 0, -1):
+        # Swap the largest item to index i (front of the list part)
+        # and the last item of the heap to the top
+        list_swap(obj_list, 0, i)
+        obj_i = 0
+        left_i = 1
+        right_i = 2
+        # Bubble down to maintain the heap property
+        # i.e. swap with left or right child until obj > left and right child
+        #      or obj has reached the bottom of the heap
+        in_pos = False
+        while not in_pos:
+            # Find the index for larger of the left and right children
+            # Right child if larger than left child and right in heap
+            # Left child if right child is not in heap or larger than right
+            larger_i = (right_i if right_i < i and
+                        obj_list[right_i] > obj_list[left_i] else left_i)
+            # Swap with the larger child if it is in the heap
+            if larger_i < i and obj_list[obj_i] < obj_list[larger_i]:
+                list_swap(obj_list, obj_i, larger_i)
+            else:
+                in_pos = True
+            # Update indices
+            obj_i = larger_i
+            left_i = (2*obj_i)+1
+            right_i = left_i+1
+
+
+def radix_sort(int_list):
     '''(list of int) -> None
-    Performs a radix sort on a list of ints <list_of_int>.
+    Performs a radix sort on a list of ints <int_list>.
     '''
     # Insert all the integers into the main bin
-    main_bin = list_of_int
+    main_bin = int_list
 
     # Check if there is at least two int in the list to sort
-    if len(list_of_int) > 1:
+    if len(int_list) > 1:
         # Create 10 empty bins for 0-9
         digit_bins = []
         for i in range(10):
