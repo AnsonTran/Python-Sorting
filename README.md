@@ -6,7 +6,7 @@ This repository contains python functions for the following sorts. Sorting is pe
 3. Insertion Sort - COMPLETE
 4. Quick Sort - COMPLETE
 5. Merge Sort(Out of Place) - COMPLETE
-6. Heap Sort
+6. Heap Sort - COMPLETE
 7. Radix Sort - COMPLETE
 
 This file requires Python 3.1 and above to run
